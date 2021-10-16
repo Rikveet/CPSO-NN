@@ -1,15 +1,18 @@
 import math
 import random
+from termcolor import colored
 
 maxW = 0.5
 minW = -0.5
 Vmax = 0.9
 W = 0.729844
-c1 = 1.49618 # 1.49618
+c1 = 1.49618  # 1.49618
 c2 = 1.49618
 nSubParticles = 25
 bestError = float("inf")
 structure = {}
+activationFunctions = {}
+tActivation = ""
 inputData = []
 contextVec = []
 CPSO = []
@@ -50,8 +53,20 @@ class Particle:
         self.bWeights = [float("inf") for _ in range(len(w))]
 
 
+def sigmoid(inpt):
+    return 1 / (1 + math.exp(-inpt))
+
+
+def tanh(inpt):
+    return (math.exp(inpt) - math.exp(-inpt)) / (math.exp(inpt) + math.exp(-inpt))
+
+
 def activation_function(inpt):
-    return 1.0 / (1.0 + math.exp(-inpt))  # activation function
+    global tActivation, activationFunctions
+    try:
+        return activationFunctions[tActivation](inpt)  # activation function
+    except:
+        print("Activation function invalid!")
 
 
 class Node:
@@ -210,7 +225,13 @@ def iris():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    global activationFunctions, tActivation
+    activationFunctions = {
+        "sigmoid": sigmoid,
+        "tanh": tanh
+    }
     config = {
         1: iris
     }
+
     config[1]()
